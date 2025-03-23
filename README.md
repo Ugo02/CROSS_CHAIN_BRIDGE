@@ -1,66 +1,58 @@
-## Foundry
+# Cross-Chain Bridge Project (Initial Phase)
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This project is the **initial phase** of a cross-chain bridge implementation, designed to facilitate the transfer of tokens between two Ethereum testnets: **Holesky** and **Sepolia**. Currently, the system listens for `Deposit` and `Distribution` events on both chains and stores them in a PostgreSQL database. However, the **automation between depositing and distributing tokens is not yet implemented**. This means that when a user deposits tokens on one chain, it does not automatically trigger the distribution on the other chain. This functionality will be added in a future phase.
 
-Foundry consists of:
+---
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Quick Start
 
-## Documentation
+### 1. Set Up the Database
 
-https://book.getfoundry.sh/
+1. **Install PostgreSQL**:
+   - Install PostgreSQL from [postgresql.org](https://www.postgresql.org/download/).
 
-## Usage
+2. **Create a Database**:
+   - Create a new database for the project:
 
-### Build
+     ```sql
+     CREATE DATABASE cross_chain_bridge;
+     ```
 
-```shell
-$ forge build
-```
+3. **Set the Database URL**:
+   - Rename `.env.example` to `.env` and update it with your PostgreSQL credentials:
 
-### Test
+     ```plaintext
+     DATABASE_URL=postgres://username:password@localhost/cross_chain_bridge
+     ```
 
-```shell
-$ forge test
-```
+4. **Run Migrations**:
+   - Set up the database schema:
 
-### Format
+     ```bash
+     sqlx migrate run
+     ```
 
-```shell
-$ forge fmt
-```
+---
 
-### Gas Snapshots
+### 2. Run the Indexer
 
-```shell
-$ forge snapshot
-```
+1. **Start the Indexer**:
+   - Navigate to the `bridge_indexer` folder and run:
 
-### Anvil
+     ```bash
+     cargo run
+     ```
 
-```shell
-$ anvil
-```
+   This will start listening for `Deposit` and `Distribution` events on both chains.
 
-### Deploy
+---
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+### 3. Use the Contracts
 
-### Cast
+1. **Deposit Tokens**:
+   - Call the `deposit` function on the bridge contract for the source chain (addresses are in `.env.example`).
 
-```shell
-$ cast <subcommand>
-```
+2. **Distribute Tokens**:
+   - Call the `distribute` function on the bridge contract for the destination chain (addresses are in `.env.example`).
 
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+---
