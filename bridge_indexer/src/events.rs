@@ -53,6 +53,7 @@ where
     Ok(())
 }
 
+
 async fn process_deposit_events<M>(
     chain_name: &str,
     mut events: impl StreamExt<Item = Log>,
@@ -105,7 +106,7 @@ where
     M: Middleware + 'static,
 {
     let abi = utils::load_abi();
-    let distribution_event = abi.event("Deposit").expect("Deposit event not found in ABI");
+    let distribution_event = abi.event("Distribution").expect("Distribution event not found in ABI");
 
     pin_mut!(events);
     while let Some(log) = events.next().await {

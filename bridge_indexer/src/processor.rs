@@ -42,7 +42,7 @@ where
                 };
                 
                 let block_number = source_provider.get_block_number().await?;
-                wait_for_finality(source_provider.clone(), block_number, 15).await?;
+                wait_for_finality(source_provider.clone(), block_number, 2).await?;
                 
                 let dest_contract = Contract::new(dest_bridge, abi.clone(), dest_provider.clone());
                 

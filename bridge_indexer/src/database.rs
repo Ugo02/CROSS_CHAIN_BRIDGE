@@ -13,7 +13,7 @@ pub async fn store_deposit_event(pool: &PgPool, event: &DepositEvent, chain: &st
     sqlx::query!(
         "INSERT INTO deposits (token, sender, recipient, amount, nonce, chain) 
          VALUES ($1, $2, $3, $4, $5, $6) 
-         ON CONFLICT (nonce) DO NOTHING",
+         ON CONFLICT (nonce, chain) DO NOTHING",
         event.token.to_string(),
         event.from.to_string(),
         event.to.to_string(),
@@ -24,7 +24,7 @@ pub async fn store_deposit_event(pool: &PgPool, event: &DepositEvent, chain: &st
     .execute(pool)
     .await?;
     
-    println!("Stored deposit event with nonce: {}", event.nonce);
+    println!("Stored deposit event with nonce: {} on chain: {}", event.nonce, chain);
     Ok(())
 }
 
